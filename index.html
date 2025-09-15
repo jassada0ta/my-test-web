@@ -78,8 +78,43 @@
         </div>
     </div>
 </div>
+<h1>Random Quote</h1>
+    <blockquote id="quote-text">Loading...</blockquote>
+    <p>— <cite id="quote-author"></cite></p>
+    <button id="get-quote">Get New Quote</button>
 
+   
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+     <script>
+    // The base URL of the public API you want to access
+    const API_URL = "https://api.quotable.io/random";
+
+    // The URL of the CORS proxy
+    const PROXY_URL = "https://cors-anywhere.herokuapp.com/";
+
+    // Combine the proxy URL with the API URL
+    const PROXY_API_URL = PROXY_URL + API_URL;
+
+    function getQuote() {
+        $.get(PROXY_API_URL, function(data) {
+            // The data is a JSON object. We can access its properties directly.
+            $("#quote-text").text(data.content);
+            $("#quote-author").text(data.author);
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            // This part runs if the request fails
+            $("#quote-text").text("Error loading quote. " + textStatus);
+            console.error("Request failed: ", textStatus, errorThrown);
+        });
+    }
+
+    $(document).ready(function() {
+        getQuote(); // Load a quote when the page first loads
+        $("#get-quote").click(function() {
+            getQuote(); // Load a new quote on button click
+        });
+    });
+    </script>
 </body>
 </html>
